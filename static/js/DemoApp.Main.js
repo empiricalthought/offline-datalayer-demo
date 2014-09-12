@@ -2,16 +2,21 @@
 
 DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
 
-  Main.Controller = function () {
-    this.sectionList = new App.Sections.SectionList();
-  };
-
-  _.extend(Main.Controller.prototype, {
-
+  
+  Main.Controller = Marionette.Controller.extend({
+    initialize: function(options) {
+      this.sectionList = new App.Sections.SectionList();
+    },
+    
     start: function() {
-      App.controls.show(new Main.Views.ControlView());
+      var controlView = new Main.Views.ControlView();
+      App.controls.show(controlView);
       this.showSectionList(this.sectionList);
       this.populateList(this.sectionList);
+      this.listenTo(controlView, "reload:clicked", function() {
+        this.sectionList.reset();
+        this.populateList(this.sectionList);
+      });        
     },
 
     showSectionList: function(sectionList) {

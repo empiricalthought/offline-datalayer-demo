@@ -37,7 +37,7 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
     },
 
     reloadClicked: function () {
-      console.log("reload");
+      this.trigger("reload:clicked");
     }
   });
 });
