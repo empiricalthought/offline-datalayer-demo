@@ -2,7 +2,13 @@ from flask import Flask, jsonify
 
 import database
 
-app = Flask(__name__)
+
+class CustomFlask(Flask):
+    def get_send_file_max_age(self, name):
+        return 5                # hack for easy reload
+
+
+app = CustomFlask(__name__)
 
 
 @app.route('/data/<resource_name>')
