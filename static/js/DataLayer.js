@@ -1,6 +1,8 @@
 'use strict';
 var DataLayer = (function () {
 
+  var online = true;
+  
   function storeResults(responses) {
     var termsData = responses[0].results;
     var coursesData = responses[1].results;
@@ -35,14 +37,32 @@ var DataLayer = (function () {
     
   return {
     fetchSections: function() {
-      var termsPromise = Promise.resolve($.ajax("/data/terms"));
-      var coursesPromise = Promise.resolve($.ajax("/data/courses"));
-      var sectionsPromise = Promise.resolve($.ajax("/data/sections"));
-      var processedPromise = Promise.all(
-        [termsPromise,
-         coursesPromise,
-         sectionsPromise]).then(storeResults).then(processResults);
-      return processedPromise;
+      var promise;
+      if (online) {
+        console.log("data from network");
+        var termsPromise = Promise.resolve($.ajax("/data/terms"));
+        var coursesPromise = Promise.resolve($.ajax("/data/courses"));
+        var sectionsPromise = Promise.resolve($.ajax("/data/sections"));
+        promise = Promise.all(
+          [termsPromise,
+           coursesPromise,
+           sectionsPromise]).then(storeResults)
+      } else {
+        console.log("data from localforage");
+        promise = Promise.all(
+          [localforage.getItem('terms'),
+           localforage.getItem('courses'),
+           localforage.getItem('sections')]);
+      }
+      return promise.then(processResults);
+    },
+
+    goOnline: function() {
+      online = true;
+    },
+
+    goOffline: function() {
+      online = false;
     }
   }
 })();
