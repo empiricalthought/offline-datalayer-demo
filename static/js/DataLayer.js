@@ -63,6 +63,11 @@ var DataLayer = (function () {
 
     goOffline: function() {
       online = false;
+    },
+
+    isOnline: function() {
+      return online;
     }
+    
   }
 })();

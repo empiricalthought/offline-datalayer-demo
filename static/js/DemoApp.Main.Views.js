@@ -26,13 +26,12 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
     },
 
     offlineToggled: function () {
-      console.log("y u no work");
-      // if (DataLayer.online) {
-      //   DataLayer.goOffline();
-      // } else {
-      //   DataLayer.goOnline();
-      // }
-      // this.ui.button.set('text', DataLayer.online ? "Go Offline" : "Go Online");
+      if (DataLayer.isOnline()) {
+        DataLayer.goOffline();
+      } else {
+        DataLayer.goOnline();
+      }
+      this.ui.button.attr('value', DataLayer.isOnline() ? "Go Offline" : "Go Online");
     }
   });
 });
