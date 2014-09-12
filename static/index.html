@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Simple Datalayer Demo</title>
+  </head>
+  <body>
+    <h1>Simple Datalayer Demo</h1>
+    <div id="main">
+    </div>
+
+    <script type="text/html" id="template-sectionItemView">
+      <td><%- term_name %></td><td><%- course_name %></td>
+    </script>
+
+    <script type="text/html" id="template-sectionListView">
+      <table>
+        <thead>
+          <tr><th>Current sections</th></tr>
+        </thead>
+        <tbody>
+          <tr><th>Term</th><th>Course</th></tr>
+        </tbody>
+        <tbody id="section-list">
+        </tbody>
+      </table>
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.wreqr/0.1.0/backbone.wreqr.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.babysitter/0.1.4/backbone.babysitter.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.1.0/backbone.marionette.min.js"></script>
+    <script src="/static/js/DemoApp.js"></script>
+    <script src="/static/js/DemoApp.Sections.js"></script>
+    <script src="/static/js/DemoApp.Main.Views.js"></script>
+    <script src="/static/js/DemoApp.Main.js"></script>
+    <script>
+     $(function () {
+       DemoApp.start();
+     });
+    </script>
+  </body>
+</html>
