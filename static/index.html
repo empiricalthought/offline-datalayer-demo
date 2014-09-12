@@ -12,12 +12,15 @@
 
     <script type="text/html" id="template-controlsView">
       <form>
-        <input type="button" class="toggle" value="Go Offline"></input>
+        <input type="button" id="toggle" value="Go Offline"></input>
+        <input type="button" id="reload" value="Reload Data"></input>
+        <input type="button" id="save" value="Save"></input>
       </form>
     </script>
     
     <script type="text/html" id="template-sectionItemView">
       <td><%- term_name %></td><td><%- course_name %></td>
+      <td><input type="button" class="section-edit-button" value="Edit"></input></td>
     </script>
 
     <script type="text/html" id="template-sectionListView">
@@ -26,7 +29,7 @@
           <tr><th>Current sections</th></tr>
         </thead>
         <tbody>
-          <tr><th>Term</th><th>Course</th></tr>
+          <tr><th>Term</th><th>Course</th><th></th></tr>
         </tbody>
         <tbody id="section-list">
         </tbody>

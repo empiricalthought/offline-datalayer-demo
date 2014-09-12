@@ -18,11 +18,13 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
     template: '#template-controlsView',
 
     ui: {
-      button: '.toggle'
+      toggleButton: '#toggle',
+      reloadButton: '#reload'
     },
 
     events: {
-      'click .toggle': 'offlineToggled'
+      'click @ui.toggleButton': 'offlineToggled',
+      'click @ui.reloadButton': 'reloadClicked'
     },
 
     offlineToggled: function () {
@@ -31,7 +33,11 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
       } else {
         DataLayer.goOnline();
       }
-      this.ui.button.attr('value', DataLayer.isOnline() ? "Go Offline" : "Go Online");
+      this.ui.toggleButton.attr('value', DataLayer.isOnline() ? "Go Offline" : "Go Online");
+    },
+
+    reloadClicked: function () {
+      console.log("reload");
     }
   });
 });
