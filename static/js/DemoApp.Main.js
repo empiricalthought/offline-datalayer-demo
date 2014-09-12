@@ -10,11 +10,7 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
 
     start: function() {
       this.showSectionList(this.sectionList);
-      this.sectionList.add(new DemoApp.Sections.Section(
-         {'term_name': 'Spring 2014',
-          'course_name': 'Foobar Baz Thud'}
-      ));
-
+      this.populateList(this.sectionList);
     },
 
     showSectionList: function(sectionList) {
@@ -22,6 +18,15 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         collection: sectionList
       }));
     },
+
+    populateList: function(sectionList) {
+      var addToSectionList = function (data) {
+        sectionList.add(new App.Sections.Section(data));
+      };
+      DataLayer.fetchSections().done(function(sectionData) {
+        _.forEach(sectionData, addToSectionList);
+      });
+    }
     
   });
   
