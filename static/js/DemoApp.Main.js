@@ -23,7 +23,7 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
       var addToSectionList = function (data) {
         sectionList.add(new App.Sections.Section(data));
       };
-      DataLayer.fetchSections().done(function(sectionData) {
+      DataLayer.fetchSections().then(function(sectionData) {
         _.forEach(sectionData, addToSectionList);
       });
     }

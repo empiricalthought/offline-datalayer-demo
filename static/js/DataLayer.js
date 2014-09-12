@@ -1,12 +1,25 @@
 'use strict';
 var DataLayer = (function () {
 
-  function processResults(termsResponse, coursesResponse, sectionsResponse) {
+  function storeResults(responses) {
+    var termsData = responses[0].results;
+    var coursesData = responses[1].results;
+    var sectionsData = responses[2].results;
+    return Promise.all(
+      [localforage.setItem('terms', termsData),
+       localforage.setItem('courses', coursesData),
+       localforage.setItem('sections', sectionsData)]
+    ).then(function() {
+      return [termsData, coursesData, sectionsData];
+    });
+  }
+
+  function processResults(vals) {
+    var termsData = vals[0];
+    var coursesData = vals[1];
+    var sectionsData = vals[2];
     // this in-memory join is for demonstration purposes only
-    var sectionData = sectionsResponse[0].results;
-    var coursesData = coursesResponse[0].results;
-    var termsData = termsResponse[0].results;
-    var result = _.map(sectionData, function(section) {
+    var result = _.map(sectionsData, function(section) {
       var row = {};
       $.extend(row, section);
       row.course_name = _.find(coursesData, function(course) {
@@ -19,16 +32,16 @@ var DataLayer = (function () {
     });
     return result;
   }
-
     
   return {
     fetchSections: function() {
-      var termsPromise = $.ajax("/data/terms");
-      var coursesPromise = $.ajax("/data/courses");
-      var sectionsPromise = $.ajax("/data/sections");
-      var processedPromise = $.when(termsPromise,
-                                    coursesPromise,
-                                    sectionsPromise).then(processResults);
+      var termsPromise = Promise.resolve($.ajax("/data/terms"));
+      var coursesPromise = Promise.resolve($.ajax("/data/courses"));
+      var sectionsPromise = Promise.resolve($.ajax("/data/sections"));
+      var processedPromise = Promise.all(
+        [termsPromise,
+         coursesPromise,
+         sectionsPromise]).then(storeResults).then(processResults);
       return processedPromise;
     }
   }
