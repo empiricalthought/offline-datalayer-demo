@@ -9,6 +9,7 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
   _.extend(Main.Controller.prototype, {
 
     start: function() {
+      App.controls.show(new Main.Views.ControlView());
       this.showSectionList(this.sectionList);
       this.populateList(this.sectionList);
     },

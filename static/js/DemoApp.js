@@ -3,7 +3,8 @@
 window.DemoApp = new Backbone.Marionette.Application();
 
 DemoApp.addRegions({
-  main: '#main'
+  main: '#main',
+  controls: '#controls'
 });
 
 DemoApp.on('start', function () {
