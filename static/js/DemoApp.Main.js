@@ -33,6 +33,9 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
       DataLayer.fetchSections().then(function(sectionData) {
         _.forEach(sectionData, addToSectionList);
       }).catch(function(resp) {
+        if (resp.context) {
+          console.log(resp.context);
+        }
         var err = new Backbone.Model({
           messageText: "Unable to retrieve data: " + resp
         });
