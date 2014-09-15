@@ -40,4 +40,15 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
       this.trigger("reload:clicked");
     }
   });
+
+  Views.ErrorItemView = Backbone.Marionette.ItemView.extend({
+    tagName: 'li',
+    template: '#template-errorItemView',
+  });
+
+  Views.ErrorListView = Backbone.Marionette.CompositeView.extend({
+    template: '#template-errorListView',
+    childView: Views.ErrorItemView,
+    childViewContainer: '#error-list'
+  });
 });

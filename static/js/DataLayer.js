@@ -34,19 +34,22 @@ var DataLayer = (function () {
     });
     return result;
   }
-    
+
   return {
     fetchSections: function() {
       var promise;
       if (online) {
         console.log("data from network");
-        var termsPromise = Promise.resolve($.ajax("/data/terms"));
-        var coursesPromise = Promise.resolve($.ajax("/data/courses"));
-        var sectionsPromise = Promise.resolve($.ajax("/data/sections"));
+        var termsPromise =
+            Promise.resolve($.ajax("/data/termsa"));
+        var coursesPromise =
+            Promise.resolve($.ajax("/data/courses"));
+        var sectionsPromise =
+            Promise.resolve($.ajax("/data/sections"));
         promise = Promise.all(
           [termsPromise,
            coursesPromise,
-           sectionsPromise]).then(storeResults)
+           sectionsPromise]).then(storeResults);
       } else {
         console.log("data from localforage");
         promise = Promise.all(

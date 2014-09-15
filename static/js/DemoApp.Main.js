@@ -29,11 +29,20 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
       var addToSectionList = function (data) {
         sectionList.add(new App.Sections.Section(data));
       };
+
       DataLayer.fetchSections().then(function(sectionData) {
         _.forEach(sectionData, addToSectionList);
+      }).catch(function(resp) {
+        var err = new Backbone.Model({
+          messageText: "Unable to retrieve data: " + resp.statusText
+        });
+        App.error.show(new Main.Views.ErrorListView({
+          collection: new Backbone.Collection([err])
+        }));
       });
+
     }
-    
+
   });
   
   Main.addInitializer(function () {

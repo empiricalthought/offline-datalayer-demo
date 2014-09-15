@@ -9,6 +9,8 @@
     </div>
     <div id="controls">
     </div>
+    <div id="error">
+    </div>
 
     <script type="text/html" id="template-controlsView">
       <form>
@@ -19,7 +21,7 @@
     </script>
     
     <script type="text/html" id="template-sectionItemView">
-      <td><%- term_name %></td><td><%- course_name %></td>
+      <td><%- section_id %></td><td><%- term_name %></td><td><%- course_name %></td>
       <td><input type="button" class="section-edit-button" value="Edit"></input></td>
     </script>
 
@@ -29,12 +31,20 @@
           <tr><th>Current sections</th></tr>
         </thead>
         <tbody>
-          <tr><th>Term</th><th>Course</th><th></th></tr>
+          <tr><th>Section ID</th><th>Term</th><th>Course</th><th></th></tr>
         </tbody>
         <tbody id="section-list">
         </tbody>
       </table>
     </script>
+
+    <script type="text/html" id="template-errorListView">
+      <ul id="error-list"></ul>
+    </script>
+    <script type="text/html" id="template-errorItemView">
+      <span style="color: red" id="error-message"><%- messageText %></span>
+    </script>
+    
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
