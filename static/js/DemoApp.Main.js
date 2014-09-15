@@ -34,7 +34,7 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         _.forEach(sectionData, addToSectionList);
       }).catch(function(resp) {
         var err = new Backbone.Model({
-          messageText: "Unable to retrieve data: " + resp.statusText
+          messageText: "Unable to retrieve data: " + resp
         });
         App.error.show(new Main.Views.ErrorListView({
           collection: new Backbone.Collection([err])

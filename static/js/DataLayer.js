@@ -35,17 +35,23 @@ var DataLayer = (function () {
     return result;
   }
 
+  function ajaxHandler(resp) {
+    return new Promise(function(f, r) {
+      r(new Error(resp.statusText));
+    });
+  }
+  
   return {
     fetchSections: function() {
       var promise;
       if (online) {
         console.log("data from network");
         var termsPromise =
-            Promise.resolve($.ajax("/data/termsa"));
+            Promise.resolve($.ajax("/data/termsa")).catch(ajaxHandler);
         var coursesPromise =
-            Promise.resolve($.ajax("/data/courses"));
+            Promise.resolve($.ajax("/data/courses")).catch(ajaxHandler);
         var sectionsPromise =
-            Promise.resolve($.ajax("/data/sections"));
+            Promise.resolve($.ajax("/data/sections")).catch(ajaxHandler);
         promise = Promise.all(
           [termsPromise,
            coursesPromise,
