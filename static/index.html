@@ -14,7 +14,14 @@
 
     <script type="text/html" id="template-controlsView">
       <form>
-        <input type="button" id="toggle" value="Go Offline"></input>
+        <input type="button" id="add" value="Add New"</input>
+        <input type="button" id="offline"
+        <% if (online) { %>
+        value="Go Offline"
+        <% } else { %>
+        value="Go Online"
+        <% } %>
+        ></input>
         <input type="button" id="reload" value="Reload Data"></input>
         <input type="button" id="save" value="Save"></input>
       </form>

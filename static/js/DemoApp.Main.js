@@ -7,30 +7,27 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
     initialize: function(options) {
       this.sectionList = new App.Sections.SectionList();
     },
-    
+
     start: function() {
+      var sectionListView = new Main.Views.SectionListView({
+        collection: this.sectionList
+      });
       var controlView = new Main.Views.ControlView();
+      this.reloadData();
+      controlView.on("reloadClicked", this.reloadData, this);
+      App.main.show(sectionListView);
       App.controls.show(controlView);
-      this.showSectionList(this.sectionList);
-      this.populateList(this.sectionList);
-      controlView.on("reloadClicked", function() {
-        this.populateList(this.sectionList);
-      }, this);        
     },
 
-    showSectionList: function(sectionList) {
-      App.main.show(new Main.Views.SectionListView({
-        collection: sectionList
-      }));
-    },
-
-    populateList: function(sectionList) {
-      var addToSectionList = function (data) {
-        sectionList.add(new App.Sections.Section(data));
-      };
-
-      DataLayer.fetchSections().then(function(sectionData) {
-        _.forEach(sectionData, addToSectionList);
+    reloadData: function() {
+      var sectionList = this.sectionList;
+      DataLayer.fetchSections().then(function(sectionsData) {
+        var newSectionCollection = _.map(
+          sectionsData,
+          function(sectionData) {
+            return new App.Sections.Section(sectionData);
+          });
+        sectionList.reset(newSectionCollection);
       }).catch(function(resp) {
         if (resp.context) {
           console.log(resp.context);
@@ -42,13 +39,12 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
           collection: new Backbone.Collection([err])
         }));
       });
-
     }
-
   });
   
-  Main.addInitializer(function () {
+  Main.addInitializer(function() {
     var controller = new Main.Controller();
     controller.start();
   });
+
 });

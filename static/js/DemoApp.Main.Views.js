@@ -25,7 +25,7 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
     
   });
 
-  Views.SectionListView = Backbone.Marionette.CompositeView.extend({
+  Views.SectionListView = Backbone.Marionette.CollectionView.extend({
     template: '#template-sectionListView',
     childView: Views.SectionItemView,
     childViewContainer: '#section-list'
@@ -37,12 +37,13 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
     template: '#template-controlsView',
 
     ui: {
-      toggleButton: '#toggle',
-      reloadButton: '#reload'
+      offlineButton: '#offline',
+      reloadButton: '#reload',
+      addButton: '#add'
     },
 
     events: {
-      'click @ui.toggleButton': 'offlineToggled',
+      'click @ui.offlineButton': 'offlineToggled',
       'click @ui.reloadButton': 'reloadClicked'
     },
 
@@ -52,11 +53,15 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
       } else {
         DataLayer.goOnline();
       }
-      this.ui.toggleButton.attr('value', DataLayer.isOnline() ? "Go Offline" : "Go Online");
+      this.render();
     },
 
     reloadClicked: function () {
-      this.trigger("reload:clicked");
+      this.trigger("reloadClicked");
+    },
+
+    templateHelpers: function () {
+      return { online: DataLayer.isOnline() }
     }
   });
 
