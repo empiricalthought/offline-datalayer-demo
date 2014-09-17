@@ -21,8 +21,27 @@
     </script>
     
     <script type="text/html" id="template-sectionItemView">
-      <td><%- section_id %></td><td><%- term_name %></td><td><%- course_name %></td>
-      <td><input type="button" class="section-edit-button" value="Edit"></input></td>
+      <td><%- section_id %></td>
+      <td><input type="text" value="<%- term_name %>"
+        <% if (!editable) { %>
+        disabled="disabled"
+        <% } %>
+        >
+      </input></td>
+      <td><input type="text" value="<%- course_name %>"
+        <% if (!editable) { %>
+        disabled="disabled"
+        <% } %>
+        >
+      </input></td>
+      <td><input type="button" class="section-edit-button"
+                 <% if (!editable) { %>
+        value="Edit"
+        <% } else { %>
+        value="Done"
+        <% } %>
+        >
+      </input></td>
     </script>
 
     <script type="text/html" id="template-sectionListView">

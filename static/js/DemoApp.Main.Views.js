@@ -2,8 +2,27 @@
 
 DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
   Views.SectionItemView = Marionette.ItemView.extend({
+    editable: false,
     tagName: 'tr',
     template: '#template-sectionItemView',
+
+    ui : {
+      editButton: '.section-edit-button'
+    },
+    
+    events: {
+      'click @ui.editButton': 'editToggled'
+    },
+
+    editToggled: function() {
+      this.editable = !this.editable;
+      this.render();
+    },
+
+    templateHelpers: function () {
+      return { editable: this.editable }
+    }
+    
   });
 
   Views.SectionListView = Backbone.Marionette.CompositeView.extend({
