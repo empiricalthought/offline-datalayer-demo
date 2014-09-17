@@ -13,10 +13,9 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
       App.controls.show(controlView);
       this.showSectionList(this.sectionList);
       this.populateList(this.sectionList);
-      this.listenTo(controlView, "reload:clicked", function() {
-        this.sectionList.reset();
+      controlView.on("reloadClicked", function() {
         this.populateList(this.sectionList);
-      });        
+      }, this);        
     },
 
     showSectionList: function(sectionList) {
