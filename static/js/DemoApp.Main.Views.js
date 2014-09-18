@@ -6,7 +6,9 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
     template: '#template-sectionItemView',
 
     ui : {
-      editButton: '.section-edit-button'
+      editButton: '.section-edit-button',
+      termName: '.section-term-name',
+      courseName: '.section-course-name'
     },
     
     events: {
@@ -18,7 +20,13 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
     },
 
     editToggled: function() {
-      this.model.set('viewIsEditable', !this.model.get('viewIsEditable'));
+      var isEditable = this.model.get('viewIsEditable');
+      console.log(this.ui.courseName);
+      if (isEditable) {
+        this.model.set('course_name', this.ui.courseName[0].value);
+        this.model.set('term_name', this.ui.termName[0].value);
+      }
+      this.model.set('viewIsEditable', !isEditable);
     }
 
   });
@@ -42,9 +50,14 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
 
     events: {
       'click @ui.offlineButton': 'offlineToggled',
-      'click @ui.reloadButton': 'reloadClicked'
+      'click @ui.reloadButton': 'reloadClicked',
+      'click @ui.addButton': 'addClicked'
     },
 
+    collectionEvents: {
+      'add': 'render'
+    },
+    
     offlineToggled: function () {
       if (DataLayer.isOnline()) {
         DataLayer.goOffline();
@@ -56,6 +69,11 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
 
     reloadClicked: function () {
       this.trigger("reloadClicked");
+    },
+
+    addClicked: function() {
+      console.log("foo")
+      this.trigger("addClicked");
     },
 
     templateHelpers: function () {

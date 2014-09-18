@@ -5,11 +5,11 @@
   </head>
   <body>
     <h1>Simple Datalayer Demo</h1>
-    <div id="main">
-    </div>
     <div id="controls">
     </div>
     <div id="error">
+    </div>
+    <div id="main">
     </div>
 
     <script type="text/html" id="template-controlsView">
@@ -29,13 +29,15 @@
     
     <script type="text/html" id="template-sectionItemView">
       <td><%- section_id %></td>
-      <td><input type="text" value="<%- term_name %>"
+      <td><input type="text" class="section-term-name"
+                 value="<%- term_name %>"
         <% if (!viewIsEditable) { %>
         disabled="disabled"
         <% } %>
         >
       </input></td>
-      <td><input type="text" value="<%- course_name %>"
+      <td><input type="text" class="section-course-name"
+                 value="<%- course_name %>"
         <% if (!viewIsEditable) { %>
         disabled="disabled"
         <% } %>

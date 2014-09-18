@@ -15,10 +15,15 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
       var controlView = new Main.Views.ControlView();
       this.reloadData();
       controlView.on("reloadClicked", this.reloadData, this);
+      controlView.on("addClicked", this.addSection, this);
       App.main.show(sectionListView);
       App.controls.show(controlView);
     },
 
+    addSection: function() {
+      this.sectionList.add(new App.Sections.Section({viewIsEditable: true}));
+    },
+    
     reloadData: function() {
       var sectionList = this.sectionList;
       DataLayer.fetchSections().then(function(sectionsData) {
