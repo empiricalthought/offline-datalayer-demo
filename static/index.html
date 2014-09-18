@@ -30,19 +30,19 @@
     <script type="text/html" id="template-sectionItemView">
       <td><%- section_id %></td>
       <td><input type="text" value="<%- term_name %>"
-        <% if (!editable) { %>
+        <% if (!viewIsEditable) { %>
         disabled="disabled"
         <% } %>
         >
       </input></td>
       <td><input type="text" value="<%- course_name %>"
-        <% if (!editable) { %>
+        <% if (!viewIsEditable) { %>
         disabled="disabled"
         <% } %>
         >
       </input></td>
       <td><input type="button" class="section-edit-button"
-                 <% if (!editable) { %>
+                 <% if (!viewIsEditable) { %>
         value="Edit"
         <% } else { %>
         value="Done"

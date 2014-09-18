@@ -8,7 +8,8 @@ DemoApp.module('Sections', function(Sections, DemoApp, Backbone) {
       term_id: null,
       course_id: null,
       term_name: '',
-      course_name: ''
+      course_name: '',
+      viewIsEditable: false
     }
   });
 

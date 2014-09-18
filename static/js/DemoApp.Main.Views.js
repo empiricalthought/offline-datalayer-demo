@@ -2,7 +2,6 @@
 
 DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
   Views.SectionItemView = Marionette.ItemView.extend({
-    editable: false,
     tagName: 'tr',
     template: '#template-sectionItemView',
 
@@ -14,15 +13,14 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
       'click @ui.editButton': 'editToggled'
     },
 
-    editToggled: function() {
-      this.editable = !this.editable;
-      this.render();
+    modelEvents: {
+      'change:viewIsEditable': 'render'
     },
 
-    templateHelpers: function () {
-      return { editable: this.editable }
+    editToggled: function() {
+      this.model.set('viewIsEditable', !this.model.get('viewIsEditable'));
     }
-    
+
   });
 
   Views.SectionListView = Backbone.Marionette.CollectionView.extend({
