@@ -45,13 +45,15 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
     ui: {
       offlineButton: '#offline',
       reloadButton: '#reload',
-      addButton: '#add'
+      addButton: '#add',
+      saveButton: '#save'
     },
 
     events: {
       'click @ui.offlineButton': 'offlineToggled',
       'click @ui.reloadButton': 'reloadClicked',
-      'click @ui.addButton': 'addClicked'
+      'click @ui.addButton': 'addClicked',
+      'click @ui.saveButton': 'saveClicked'
     },
 
     collectionEvents: {
@@ -72,8 +74,11 @@ DemoApp.module('Main.Views', function (Views, App, Backbone, Marionette, $, _) {
     },
 
     addClicked: function() {
-      console.log("foo")
       this.trigger("addClicked");
+    },
+
+    saveClicked: function() {
+      this.trigger("saveClicked");
     },
 
     templateHelpers: function () {

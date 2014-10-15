@@ -19,10 +19,11 @@ def resource(resource_name):
     con = database.engine.connect()
     table = getattr(database, resource_name)
     if request.method == 'POST':
+        print request.data
         new_data = request.get_json()
         if not new_data:
             abort(400)
-        update_table(con, table, new_data)
+        update_table(con, table, new_data['data'])
     statement = table.select()
     column_names = [c.name for c in statement.columns]
     results = [dict(zip(column_names, row))
@@ -35,12 +36,16 @@ def update_table(con, table, new_data):
     pk = list(table.primary_key.columns)[0].name
     xs1, xs2 = itertools.tee(iter(new_data))
     def p(x):
-        return pk in x
-    new_items, changed_items = (itertools.ifilterfalse(p, xs1),
-                                itertools.ifilter(p, xs2))
-    con.execute(table.insert(), *list(new_items))
-    con.execute(table.update().where(table.c[pk] == bindparam('_id')),
-                *list(dict(_id=x[pk], **x) for x in changed_items))
+        return pk in x and x[pk] is not None
+    new_items, changed_items = (list(itertools.ifilterfalse(p, xs1)),
+                                list(itertools.ifilter(p, xs2)))
+    if new_items:
+        con.execute(table.insert(),
+                    [dict((k, v) for k, v in new_item.iteritems() if k != pk)
+                     for new_item in new_items])
+    if changed_items:
+        con.execute(table.update().where(table.c[pk] == bindparam('_id')),
+                    *[dict(_id=x[pk], **x) for x in changed_items])
 
 
 if __name__ == '__main__':

@@ -45,8 +45,18 @@ var DataLayer = (function () {
     }
   }
 
-  function jQueryAjaxPromise(uri) {
-    return Promise.resolve($.ajax(uri)).catch(ajaxHandler(uri));
+  function jQueryAjaxPromise() {
+    return Promise.resolve($.ajax.apply($, arguments)).catch(ajaxHandler(arguments));
+  }
+
+  function jQueryPostPromise(uri, postData) {
+    return jQueryAjaxPromise(uri, {
+      data: JSON.stringify({data: postData}),
+      type: 'POST',
+      dataType: 'json',
+      headers: {'Content-Type': 'application/json'},
+      processData: false
+    });
   }
   
   return {
@@ -69,6 +79,33 @@ var DataLayer = (function () {
            localforage.getItem('sections')]);
       }
       return promise.then(processResults);
+    },
+
+    saveSections: function(data) {
+      if (!online) {
+        return Promise.resolve("can't save while offline");
+      } else {
+        var termsData = _.map(data, function(x) {
+          return { term_id: x.term_id,
+                   term_name: x.term_name };
+        });
+        var coursesData = _.map(data, function(x) {
+          return { course_id: x.course_id,
+                   course_name: x.course_name };
+        });
+        var sectionsData = _.map(data, function(x) {
+          return { course_id: x.course_id,
+                   term_id: x.term_id,
+                   section_id: x.section_id,
+                   start_date: x.start_date,
+                   end_date: x.end_date };
+        });
+        var termsUpdate = jQueryPostPromise("/data/terms", termsData);
+        var coursesUpdate = jQueryPostPromise("/data/courses", coursesData);
+        var sectionsUpdate = jQueryPostPromise("/data/sections", sectionsData);
+        return Promise.all([termsUpdate, coursesUpdate]).then(
+          sectionsUpdate).then(function() { return "saved!";});
+      }
     },
 
     goOnline: function() {

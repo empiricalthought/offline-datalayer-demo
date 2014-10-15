@@ -2,7 +2,6 @@
 
 DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
 
-  
   Main.Controller = Marionette.Controller.extend({
     initialize: function(options) {
       this.sectionList = new App.Sections.SectionList();
@@ -16,6 +15,7 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
       this.reloadData();
       controlView.on("reloadClicked", this.reloadData, this);
       controlView.on("addClicked", this.addSection, this);
+      controlView.on("saveClicked", this.saveData, this);
       App.main.show(sectionListView);
       App.controls.show(controlView);
     },
@@ -43,6 +43,14 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
         App.error.show(new Main.Views.ErrorListView({
           collection: new Backbone.Collection([err])
         }));
+      });
+    },
+
+    saveData: function() {
+      console.log("here");
+      DataLayer.saveSections(this.sectionList.toJSON()).then(function(result) {
+        console.log("Everywhere");
+        alert(result);
       });
     }
   });
