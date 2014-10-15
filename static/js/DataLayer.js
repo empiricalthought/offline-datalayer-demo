@@ -4,9 +4,9 @@ var DataLayer = (function () {
   var online = true;
   
   function storeResults(responses) {
-    var termsData = responses[0].results;
-    var coursesData = responses[1].results;
-    var sectionsData = responses[2].results;
+    var termsData = responses[0].data;
+    var coursesData = responses[1].data;
+    var sectionsData = responses[2].data;
     return Promise.all(
       [localforage.setItem('terms', termsData),
        localforage.setItem('courses', coursesData),
