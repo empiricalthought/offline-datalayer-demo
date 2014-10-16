@@ -22,7 +22,6 @@ def resource(resource_name):
     new_items = []
     new_item_ids = set()
     if request.method == 'POST':
-        print request.data
         new_data = request.get_json()
         if not new_data:
             abort(400)

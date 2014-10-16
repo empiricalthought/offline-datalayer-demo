@@ -7,14 +7,14 @@ terms = Table(
     'terms',
     metadata,
     Column('term_id', Integer, primary_key=True),
-    Column('term_name', String, nullable=False),
+    Column('term_name', String, nullable=False, unique=True),
 )
 
 courses = Table(
     'courses',
     metadata,
     Column('course_id', Integer, primary_key=True),
-    Column('course_name', String, nullable=False),
+    Column('course_name', String, nullable=False, unique=True),
 )
 
 sections = Table(
