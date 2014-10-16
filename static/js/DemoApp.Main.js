@@ -49,8 +49,7 @@ DemoApp.module('Main', function (Main, App, Backbone, Marionette, $, _) {
     saveData: function() {
       console.log("here");
       DataLayer.saveSections(this.sectionList.toJSON()).then(function(result) {
-        console.log("Everywhere");
-        alert(result);
+        console.log(result);
       });
     }
   });

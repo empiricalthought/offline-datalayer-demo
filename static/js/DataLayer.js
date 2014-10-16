@@ -16,6 +16,29 @@ var DataLayer = (function () {
     });
   }
 
+  function fixupSections(sectionsData) {
+    return function(responses) {
+      var termsData = responses[0].data;
+      var coursesData = responses[1].data;
+      // below requires special knowledge of server-side data model,
+      // specifically alternate keys for data.  In my opinion, all of
+      // this joining/unjoining is better off on the server side, even
+      // if it means very specialized code that cannot be reused.
+      _.each(sectionsData, function(section) {
+        var term_id = _.find(termsData, function(term) {
+          return term.term_name == section.term_name;
+        }).term_id;
+        var course_id = _.find(coursesData, function(course) {
+          return course.course_name == section.course_name;
+        }).course_id;
+        section.term_id = term_id;
+        section.course_id = course_id;
+      });
+      console.log("derp");
+      return sectionsData;
+    }
+  }
+  
   function processResults(vals) {
     var termsData = vals[0];
     var coursesData = vals[1];
@@ -51,7 +74,7 @@ var DataLayer = (function () {
 
   function jQueryPostPromise(uri, postData) {
     return jQueryAjaxPromise(uri, {
-      data: JSON.stringify({data: postData}),
+      data: JSON.stringify({data: postData, meta: {temp_id: '__id'}}),
       type: 'POST',
       dataType: 'json',
       headers: {'Content-Type': 'application/json'},
@@ -85,26 +108,24 @@ var DataLayer = (function () {
       if (!online) {
         return Promise.resolve("can't save while offline");
       } else {
-        var termsData = _.map(data, function(x) {
+        var termsData = _.map(data, function(x, i) {
           return { term_id: x.term_id,
-                   term_name: x.term_name };
+                   term_name: x.term_name,
+                   __id: i};
         });
-        var coursesData = _.map(data, function(x) {
+        var coursesData = _.map(data, function(x, i) {
           return { course_id: x.course_id,
-                   course_name: x.course_name };
-        });
-        var sectionsData = _.map(data, function(x) {
-          return { course_id: x.course_id,
-                   term_id: x.term_id,
-                   section_id: x.section_id,
-                   start_date: x.start_date,
-                   end_date: x.end_date };
+                   course_name: x.course_name,
+                   __id: i};
         });
         var termsUpdate = jQueryPostPromise("/data/terms", termsData);
         var coursesUpdate = jQueryPostPromise("/data/courses", coursesData);
-        var sectionsUpdate = jQueryPostPromise("/data/sections", sectionsData);
+        //var sectionsUpdate = jQueryPostPromise("/data/sections", sectionsData);
         return Promise.all([termsUpdate, coursesUpdate]).then(
-          sectionsUpdate).then(function() { return "saved!";});
+          fixupSections(data)).then(function(sectionsData) {
+            console.log(sectionsData);
+            return jQueryPostPromise("/data/sections", sectionsData);
+          });
       }
     },
 

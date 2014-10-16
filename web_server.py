@@ -18,35 +18,47 @@ app = CustomFlask(__name__)
 def resource(resource_name):
     con = database.engine.connect()
     table = getattr(database, resource_name)
+    pk = list(table.primary_key.columns)[0].name
+    new_items = []
+    new_item_ids = set()
     if request.method == 'POST':
         print request.data
         new_data = request.get_json()
         if not new_data:
             abort(400)
-        update_table(con, table, new_data['data'])
+        new_items, new_item_ids = update_table(con, table, new_data['data'],
+                                               new_data['meta']['temp_id'])
     statement = table.select()
     column_names = [c.name for c in statement.columns]
-    results = [dict(zip(column_names, row))
-               for row in con.execute(statement).fetchall()]
+    all_items = [dict(zip(column_names, row))
+                 for row in con.execute(statement).fetchall()]
+    old_items = (item for item in all_items
+                 if item[pk] not in new_item_ids)
+    results = list(itertools.chain(new_items, old_items))
     con.close()
     return jsonify({'data': results})
 
 
-def update_table(con, table, new_data):
+def update_table(con, table, new_data, temp_id_name):
     pk = list(table.primary_key.columns)[0].name
     xs1, xs2 = itertools.tee(iter(new_data))
     def p(x):
         return pk in x and x[pk] is not None
     new_items, changed_items = (list(itertools.ifilterfalse(p, xs1)),
                                 list(itertools.ifilter(p, xs2)))
+    new_item_ids = set()
     if new_items:
-        con.execute(table.insert(),
-                    [dict((k, v) for k, v in new_item.iteritems() if k != pk)
-                     for new_item in new_items])
+        result = con.execute(table.insert(),
+                             [dict((k, v) for k, v in new_item.iteritems()
+                                   if k not in (pk, temp_id_name))
+                              for new_item in new_items])
+        new_item_ids = set(result.inserted_primary_key)
+        for rec, new_id in zip(new_items, result.inserted_primary_key):
+            rec[pk] = new_id
     if changed_items:
         con.execute(table.update().where(table.c[pk] == bindparam('_id')),
                     *[dict(_id=x[pk], **x) for x in changed_items])
-
+    return new_items, new_item_ids
 
 if __name__ == '__main__':
     app.debug = True
