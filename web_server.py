@@ -48,13 +48,13 @@ def update_table(con, table, new_data, temp_id_name):
                                 list(itertools.ifilter(p, xs2)))
     new_item_ids = set()
     if new_items:
-        result = con.execute(table.insert(),
-                             [dict((k, v) for k, v in new_item.iteritems()
-                                   if k not in (pk, temp_id_name))
-                              for new_item in new_items])
-        new_item_ids = set(result.inserted_primary_key)
-        for rec, new_id in zip(new_items, result.inserted_primary_key):
-            rec[pk] = new_id
+        statement = table.insert()
+        for new_item in new_items:
+            fixed_item = dict((k, v) for k, v in new_item.iteritems()
+                              if k not in (pk, temp_id_name))
+            new_key = con.execute(statement, fixed_item).inserted_primary_key
+            new_item[pk] = new_key[0]
+            new_item_ids.add(new_key[0])
     if changed_items:
         con.execute(table.update().where(table.c[pk] == bindparam('_id')),
                     *[dict(_id=x[pk], **x) for x in changed_items])
