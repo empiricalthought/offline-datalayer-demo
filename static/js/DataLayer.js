@@ -34,7 +34,6 @@ var DataLayer = (function () {
         section.term_id = term_id;
         section.course_id = course_id;
       });
-      console.log("derp");
       return sectionsData;
     }
   }
